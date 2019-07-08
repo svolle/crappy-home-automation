@@ -1,3 +1,4 @@
+use rand::distributions::Normal;
 use rand::prelude::*;
 use rand::Rng;
 use std::mem::transmute;
@@ -19,9 +20,7 @@ fn generate_reading() -> String {
         return String::from(unsafe { str::from_utf8_unchecked(&gibberish) });
     }
 
-    let dist = rand::distributions::Normal::new(20.0, 2.0);
-    let t = rng.sample(dist);
-
+    let t = rng.sample(Normal::new(20.0, 2.0));
     format!("{:.*}°C\n", 1, t)
 }
 

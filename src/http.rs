@@ -1,15 +1,15 @@
 extern crate hyper;
 
 use rand::prelude::*;
+use rand::distributions::Normal;
 
 use hyper::rt::Future;
 use hyper::service::service_fn_ok;
 use hyper::{Body, Method, Request, Response, Server, StatusCode};
 
 fn generate_reading(req: Request<Body>) -> Response<Body> {
-    let dist = rand::distributions::Normal::new(68.0, 4.0);
-    let mut rng = thread_rng();
     let mut response = Response::new(Body::empty());
+    let mut rng = thread_rng();
 
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/temperature") => {
@@ -18,7 +18,7 @@ fn generate_reading(req: Request<Body>) -> Response<Body> {
                 *response.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
                 *response.body_mut() = Body::from("ERROR");
             } else {
-                let t = rng.sample(dist);
+                let t = rng.sample(Normal::new(68.0, 4.0));
 
                 *response.body_mut() =
                     Body::from(format!("{{\n\t\"farenheit\":\"{:.*e}\"\n}}", 3, t));

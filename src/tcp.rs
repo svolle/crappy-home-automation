@@ -4,12 +4,12 @@ use std::thread;
 use std::thread::sleep;
 use std::time;
 
+use rand::distributions::Normal;
 use rand::prelude::*;
 
 fn generate_reading(counter: u32) -> String {
     let mut rng = thread_rng();
-    let dist = rand::distributions::Normal::new(22.0, 3.0);
-    let mut t = rng.sample(dist);
+    let mut t = rng.sample(Normal::new(22.0, 3.0));
 
     if counter % 2 != 0 {
         t = -t;
